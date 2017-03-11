@@ -25,7 +25,9 @@ SECRET_KEY = '5xhsgd$l_2%*)b2a7c$+rx-%h(vh-z2*&y_jx@m4gvqrxsse=2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'iotodolists.eu-central-1.elasticbeanstalk.com',
+]
 
 
 # Application definition
