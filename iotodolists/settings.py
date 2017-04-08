@@ -27,12 +27,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'iotodolists.eu-central-1.elasticbeanstalk.com',
+    #"127.0.0.1",
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'superlists.apps.SuperlistsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
