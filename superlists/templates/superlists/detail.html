@@ -5,4 +5,11 @@
 {% for todo_list_item in todo_list.todolistitem_set.all %}
     <li>{{ todo_list_item.name }}</li>
 {% endfor %}
+
+<form action="{% url 'add_todo_list_item' todo_list.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Add" />
+</form>
+
 </ul>

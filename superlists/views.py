@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 
-from .models import ToDoList
-from .forms import ToDoListCreationForm
+from .models import ToDoList, ToDoListItem
+from .forms import ToDoListCreationForm, ToDoListItemAdditionForm
 
 # Create your views here.
 
@@ -21,7 +21,13 @@ def index(request):
 
 def detail(request, todo_list_id):
     todo_list = get_object_or_404(ToDoList, pk=todo_list_id)
-    return render(request, 'superlists/detail.html', {'todo_list': todo_list})
+    template = loader.get_template('superlists/detail.html')
+    form = ToDoListItemAdditionForm()
+    context = {
+        'todo_list': todo_list,
+        'form': form,
+    }
+    return HttpResponse(template.render(context, request))
 
 
 def create_todo_list(request):
@@ -32,3 +38,16 @@ def create_todo_list(request):
                 name=form.cleaned_data['name'], is_private=form.cleaned_data['is_private'])
             todo_list.save()
             return HttpResponseRedirect('/' + str(todo_list.id) + '/')
+    else:
+        raise Http404("Resource does not exist")
+
+def add_todo_list_item(request, todo_list_id):
+    if request.method == 'POST':
+        form = ToDoListCreationForm(request.POST)
+        if form.is_valid():
+            todo_list = ToDoList.objects.get(pk=todo_list_id)
+            todo_list_item = ToDoListItem(name=form.cleaned_data['name'], todo_list=todo_list)
+            todo_list_item.save()
+            return HttpResponseRedirect('/' + str(todo_list_id) + '/')
+    else:
+        raise Http404("Resource does not exist")
