@@ -1,0 +1,8 @@
+{% comment %}placeholder template{% endcomment %}
+
+<h1>{{ todo_list.name }}</h1>
+<ul>
+{% for todo_list_item in todo_list.todolistitem_set.all %}
+    <li>{{ todo_list_item.name }}</li>
+{% endfor %}
+</ul>
