@@ -1,0 +1,37 @@
+body{
+  background-color: white;
+}
+
+.navbar{
+  background-color: #023E86;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.navbar-form{
+  border: 0;
+}
+
+.form-control{
+  margin: 3px 0;
+}
+
+.jumbotron{
+  background-color: #023E86;
+  color: white;
+  text-align: center;
+}
+ .list_name{
+   color: white;
+   background-color:#023E86;
+   height: 50px;
+ }
+
+ .new_element{
+   width: 50%;
+   margin: auto;
+ }
+
+ .log_button{
+   color: black;
+ }
