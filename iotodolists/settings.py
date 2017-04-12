@@ -26,8 +26,8 @@ SECRET_KEY = '5xhsgd$l_2%*)b2a7c$+rx-%h(vh-z2*&y_jx@m4gvqrxsse=2'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'iotodolists.eu-central-1.elasticbeanstalk.com',
-    #"127.0.0.1",
+    'io-to-do-lists.eu-central-1.elasticbeanstalk.com',
+    "127.0.0.1",
 ]
 
 
@@ -77,12 +77,24 @@ WSGI_APPLICATION = 'iotodolists.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if 'RDS_DB_NAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
