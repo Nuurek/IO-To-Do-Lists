@@ -1,17 +1,28 @@
-{% comment %}placeholder template{% endcomment %}
+{% extends "base.html" %}
 
 
-<form action="{% url 'create_todo_list' %}" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Create" />
-</form>
+<!--welcome page-->
+<div class="container">
+    <div >
+        <h1>Start a new TO-DO list!</h1>
+        <p><input type="text" class="form-control" placeholder="Name your new list" </input></p>
+        <div class="checkbox">
+            <label><input type="checkbox" value="">Private</label>
+        </div>
+    </div>
+
+    <form class="jumbotron" action="{% url 'create_todo_list' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Create"/>
+    </form>
+</div>
 
 {% if latest_todo_lists %}
     <ul>
-    {% for todo_list in latest_todo_lists %}
-        <li><a href="{% url 'detail' todo_list.id %}">{{ todo_list.name }}</a> {{ todo_list.creation_date }}</li>
-    {% endfor %}
+        {% for todo_list in latest_todo_lists %}
+            <li><a href="{% url 'detail' todo_list.id %}">{{ todo_list.name }}</a> {{ todo_list.creation_date }}</li>
+        {% endfor %}
     </ul>
 {% else %}
     <p>No polls are available.</p>
