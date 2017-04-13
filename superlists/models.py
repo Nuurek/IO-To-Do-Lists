@@ -1,18 +1,15 @@
 from django.db import models
-from django.utils import timezone
-
-# Create your models here.
 
 
+'''
+The ToDoList class defines the main storage unit in application.
+
+Attributes:
+    name - name of the list defined by user
+    creation_date - determines when the list was created
+    is_private - does user allow for displaying his/her list on main page
+'''
 class ToDoList(models.Model):
-    '''
-    The ToDoList class defines the main storage unit in application.
-
-    Attributes:
-        name - name of the list defined by user
-        creation_date - determines when the list was created
-        is_private - does user allow for displaying his/her list on main page
-    '''
     name = models.CharField(max_length=200)
     creation_date = models.DateTimeField(
         'date created', auto_now_add=True, blank=True)
@@ -22,15 +19,15 @@ class ToDoList(models.Model):
         return str(self.creation_date) + ' ' + self.name
 
 
-class ToDoListItem(models.Model):
-    '''
-    Represents a single task on a todo list.
+'''
+Represents a single task on a todo list.
 
-    Attributes:
-        name - title of the item
-        completed - true if task is marked as completed, false otherwise
-        todo_list - ToDoList corresponding to this item
-    '''
+Attributes:
+    name - title of the item
+    completed - true if task is marked as completed, false otherwise
+    todo_list - ToDoList corresponding to this item
+'''
+class ToDoListItem(models.Model):
     name = models.CharField(max_length=200)
     completed = models.BooleanField(default=False)
     todo_list = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
