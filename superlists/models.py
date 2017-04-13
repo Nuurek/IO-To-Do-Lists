@@ -3,7 +3,13 @@ from django.utils import timezone
 
 # Create your models here.
 
-
+'''
+The ToDoList class defines the main storage unit in application.
+Each list has three fields:
+name - name of the list defined by user
+creation_date - determines when the list was created
+is_private - does user allow for displaying his/her list on main page?
+'''
 class ToDoList(models.Model):
     name = models.CharField(max_length=200)
     creation_date = models.DateTimeField(
