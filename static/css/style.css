@@ -1,37 +1,45 @@
-body{
-  background-color: white;
+body {
+    background-color: white;
 }
 
-.navbar{
-  background-color: #023E86;
-  padding-top: 10px;
-  padding-bottom: 10px;
+.navbar {
+    background-color: #023E86;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-.navbar-form{
-  border: 0;
+.navbar-form {
+    border: 0;
 }
 
-.form-control{
-  margin: 3px 0;
+.logo {
+    max-height: 50px;
 }
 
-.jumbotron{
-  background-color: #023E86;
-  color: white;
-  text-align: center;
+.form-control {
+    margin: 3px 0;
 }
- .list_name{
-   color: white;
-   background-color:#023E86;
-   height: 50px;
- }
 
- .new_element{
-   width: 50%;
-   margin: auto;
- }
+.jumbotron {
+    background-color: #023E86;
+    color: white;
+    text-align: center;
+}
 
- .log_button{
-   color: black;
- }
+.list_name {
+    color: white;
+    background-color: #023E86;
+    height: 50px;
+}
+
+.add-element {
+    background-color: #023E86;
+}
+
+.log_button {
+    color: black;
+}
+
+.list-group-item {
+    color: initial;
+}

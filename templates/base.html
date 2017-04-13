@@ -15,7 +15,7 @@
 <body>
 <nav class="navbar navbar-default">
     <div class="container">
-        <image src="{% static "img/logo_black.svg" %}" height="50px"/>
+        <a href="{% url "index" %}"><img class="logo" src="{% static "img/logo_black.svg" %}"></a>
         <div class="log_in navbar-right">
             <form class="navbar-form">
                 <div class="form-group">
@@ -28,26 +28,9 @@
     </div>
 </nav>
 
+<div class="container">
 {% block content %}
 {% endblock %}
-<!--welcome page-->
-<div class="container">
-    <div class="jumbotron">
-        <h1>Start a new TO-DO list!</h1>
-        <p><input type="text" class="form-control" placeholder="Name your new list" </input></p>
-        <div class="checkbox">
-            <label><input type="checkbox" value="">Private</label>
-        </div>
-    </div>
-</div>
-
-<!--list view-->
-<div class="container">
-    <div class="jumbotron">
-        <input type="html" class="list_name form-control" value="Moja lista">
-        <input type="html" class="list_element form-control" value="Mój elements">
-        <input type="text" class="new_element form-control" placeholder="add new element"/>
-    </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

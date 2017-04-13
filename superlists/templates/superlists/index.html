@@ -1,29 +1,36 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 
 
-<!--welcome page-->
-<div class="container">
-    <div >
-        <h1>Start a new TO-DO list!</h1>
-        <p><input type="text" class="form-control" placeholder="Name your new list" </input></p>
-        <div class="checkbox">
-            <label><input type="checkbox" value="">Private</label>
-        </div>
-    </div>
+{% block content %}
 
     <form class="jumbotron" action="{% url 'create_todo_list' %}" method="post">
         {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Create"/>
+        <h1>Start a new TO-DO list!</h1>
+        <p>{{ form.name|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:Name your new list" }}</p>
+        <div class="form-group-inline">
+            <label class="form-check-label">
+                {{ form.is_private|attr:"type:checkbox" }}
+                Private?
+            </label>
+        </div>
     </form>
-</div>
 
-{% if latest_todo_lists %}
-    <ul>
-        {% for todo_list in latest_todo_lists %}
-            <li><a href="{% url 'detail' todo_list.id %}">{{ todo_list.name }}</a> {{ todo_list.creation_date }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+    <div class="jumbotron">
+        {% if latest_todo_lists %}
+            <ul class="list-group">
+                {% for todo_list in latest_todo_lists %}
+                    {% if not todo_list.is_private %}
+                        <li class="list-group-item">
+                            <a href="{% url 'detail' todo_list.id %}">{{ todo_list.name }}, {{ todo_list.creation_date }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No lists are available.</p>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

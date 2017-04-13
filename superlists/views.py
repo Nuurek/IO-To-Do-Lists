@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
+from django.urls import reverse
 
 from .models import ToDoList, ToDoListItem
 from .forms import ToDoListCreationForm, ToDoListItemAdditionForm
@@ -34,10 +35,8 @@ def create_todo_list(request):
     if request.method == 'POST':
         form = ToDoListCreationForm(request.POST)
         if form.is_valid():
-            todo_list = ToDoList.objects.create(
-                name=form.cleaned_data['name'], is_private=form.cleaned_data['is_private'])
-            todo_list.save()
-            return HttpResponseRedirect('/' + str(todo_list.id) + '/')
+            todo_list = form.save()
+            return HttpResponseRedirect(reverse("detail", kwargs={"todo_list_id": todo_list.id}))
     else:
         raise Http404("Resource does not exist")
 
