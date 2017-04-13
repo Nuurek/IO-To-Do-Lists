@@ -1,20 +1,21 @@
 from django import forms
 from .models import ToDoList
 
-'''
-Form for creating ToDoList objects.
-Allows rendering, parsing, sanitizing and saving objects to DB.
-'''
+
 class ToDoListCreationForm(forms.ModelForm):
+    """
+    Form for creating ToDoList objects.
+    Allows rendering, parsing, sanitizing and saving objects to DB.
+    """
     class Meta:
         model = ToDoList
         fields = '__all__'
 
 
-'''
-Form for creating ToDoListItem objects.
-Contains only one field: name.
-Allows rendering, parsing, sanitizing and saving objects to DB.
-'''
 class ToDoListItemAdditionForm(forms.Form):
+    """
+    Form for creating ToDoListItem objects.
+    Contains only one field: name.
+    Allows rendering, parsing, sanitizing and saving objects to DB.
+    """
     name = forms.CharField(label="", max_length=200)
