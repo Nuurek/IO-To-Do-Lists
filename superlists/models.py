@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class ToDoList(models.Model):
     """
     The ToDoList class defines the main storage unit in application.

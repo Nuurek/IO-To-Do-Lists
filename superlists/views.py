@@ -1,31 +1,25 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
+from django.views.generic import CreateView, ListView
 from django.urls import reverse
 
 from .models import ToDoList, ToDoListItem
 from .forms import ToDoListCreationForm, ToDoListItemAdditionForm
 
 
-def index(request):
-    """
-    Handles HTTP request for the main page.
+class ToDoListCreateView(CreateView):
+    model = ToDoList
+    fields = "__all__"
 
-    Args:
-        request - HTTP request
 
-    Returns:
-        HTTP response with the main page view.
-    """
+class PublicToDoListListView(ListView):
+    queryset = ToDoList.objects.all().filter(is_private__exact=False)
+    fields = "__all__"
 
-    latest_todo_lists = ToDoList.objects.order_by('-creation_date')[:10]
-    template = loader.get_template('superlists/index.html')
-    form = ToDoListCreationForm()
-    context = {
-        'latest_todo_lists': latest_todo_lists,
-        'form': form,
-    }
-    return HttpResponse(template.render(context, request))
+
+class IndexMixin(ToDoListCreateView, PublicToDoListListView):
+    template_name = "superlists/index.html"
 
 
 def detail(request, todo_list_id):

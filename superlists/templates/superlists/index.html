@@ -17,20 +17,17 @@
     </form>
 
     <div class="jumbotron">
-        {% if latest_todo_lists %}
+        {% if object_list %}
             <ul class="list-group">
-                {% for todo_list in latest_todo_lists %}
-                    {% if not todo_list.is_private %}
-                        <li class="list-group-item">
-                            <a href="{% url 'detail' todo_list.id %}">{{ todo_list.name }}, {{ todo_list.creation_date }}</a>
-                        </li>
-                    {% endif %}
+                {% for todo_list in object_list %}
+                    <li class="list-group-item">
+                        <a href="{% url 'detail' todo_list.id %}">{{ todo_list.name }}, {{ todo_list.creation_date }}</a>
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
             <p>No lists are available.</p>
         {% endif %}
-
     </div>
 
 {% endblock %}
