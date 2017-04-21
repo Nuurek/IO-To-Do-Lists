@@ -1,1 +1,1 @@
-from settings.local import *
+from ..settings.local import *
