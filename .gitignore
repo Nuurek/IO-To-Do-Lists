@@ -98,3 +98,6 @@ ENV/
 
 # pycco docs
 docs
+
+# Custom manage.py wrapper
+run.sh
