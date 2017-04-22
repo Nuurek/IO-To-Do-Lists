@@ -1,11 +1,10 @@
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.template import loader
-from django.views.generic import CreateView, ListView
+from django.http import HttpResponseRedirect, Http404
+from django.views.generic import CreateView, ListView, TemplateView, FormView
 from django.urls import reverse
+from django.shortcuts import redirect
 
 from .models import ToDoList, ToDoListItem
-from .forms import ToDoListCreationForm, ToDoListItemAdditionForm
+from .forms import ToDoListCreationForm, ToDoListItemForm
 
 
 class ToDoListCreateView(CreateView):
@@ -16,31 +15,39 @@ class ToDoListCreateView(CreateView):
 class PublicToDoListListView(ListView):
     queryset = ToDoList.objects.all().filter(is_private__exact=False)
     fields = "__all__"
+    context_object_name = "todo_lists"
 
 
 class IndexMixin(ToDoListCreateView, PublicToDoListListView):
     template_name = "superlists/index.html"
 
 
-def detail(request, todo_list_id):
-    """
-    Handles HTTP request for the detailed view of a list.
+class ToDoListDetailView(TemplateView):
+    template_name = "superlists/list.html"
 
-    Args:
-        request - HTTP request
-        todo_list_id - id of a list to display
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        todo_list_id = self.kwargs["todo_list_id"]
+        todo_list = ToDoList.objects.get(id=todo_list_id)
+        context["todo_list"] = todo_list
+        context["to_do_list_items"] = ToDoListItem.objects.all().filter(todo_list=todo_list.pk)
+        context["form"] = ToDoListItemForm()
+        return context
 
-    Returns:
-        HTTP response with list details view if list exists, 404 error code page otherwise.
-    """
-    todo_list = get_object_or_404(ToDoList, pk=todo_list_id)
-    template = loader.get_template('superlists/detail.html')
-    form = ToDoListItemAdditionForm()
-    context = {
-        'todo_list': todo_list,
-        'form': form,
-    }
-    return HttpResponse(template.render(context, request))
+    model = ToDoList
+    fields = "__all__"
+
+
+class ToDoListItemCreateView(FormView):
+    form_class = ToDoListItemForm
+
+    def form_valid(self, form):
+        form.instance.todo_list = ToDoList.objects.get(id=self.kwargs["todo_list_id"])
+        return super(ToDoListItemCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        id = self.kwargs["todo_list_id"]
+        return redirect("list", todo_list_id=id)
 
 
 def create_todo_list(request):
@@ -57,7 +64,7 @@ def create_todo_list(request):
         form = ToDoListCreationForm(request.POST)
         if form.is_valid():
             todo_list = form.save()
-            return HttpResponseRedirect(reverse("detail", kwargs={"todo_list_id": todo_list.id}))
+            return HttpResponseRedirect(reverse("list", kwargs={"todo_list_id": todo_list.id}))
     else:
         raise Http404("Resource does not exist")
 

@@ -1,5 +1,5 @@
 from django import forms
-from .models import ToDoList
+from .models import ToDoList, ToDoListItem
 
 
 class ToDoListCreationForm(forms.ModelForm):
@@ -10,6 +10,13 @@ class ToDoListCreationForm(forms.ModelForm):
     class Meta:
         model = ToDoList
         fields = '__all__'
+
+
+class ToDoListItemForm(forms.ModelForm):
+
+    class Meta:
+        model = ToDoListItem
+        fields = ("name",)
 
 
 class ToDoListItemAdditionForm(forms.Form):

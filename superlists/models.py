@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class ToDoList(models.Model):
@@ -18,6 +19,9 @@ class ToDoList(models.Model):
     def __str__(self):
         return str(self.creation_date) + ' ' + self.name
 
+    def get_absolute_url(self):
+        return reverse('list', kwargs={"todo_list_id": self.id})
+
 
 class ToDoListItem(models.Model):
     """
@@ -34,3 +38,6 @@ class ToDoListItem(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('list', kwargs={"todo_list_id": self.todo_list.id})

@@ -10,7 +10,7 @@
                     <li class="list-group-item">{{ todo_list_item }}</li>
                 {% endfor %}
             </ul>
-            <form class="form-group" action="{% url 'add_todo_list_item' todo_list.id %}" method="post">
+            <form class="form-group" action="{% url 'create_item' todo_list.id %}" method="post">
                 {% csrf_token %}
                 {{ form.name|add_class:"new_element form-control" }}
                 <button type="submit" class="btn btn-primary " placeholder="Add new element">Add new element</button>
