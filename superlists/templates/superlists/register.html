@@ -1,0 +1,8 @@
+<h3>placeholder template</h3>
+
+Please fill out this form and register to Superlists!
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Register" />
+</form>

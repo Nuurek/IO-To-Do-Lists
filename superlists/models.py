@@ -22,7 +22,7 @@ class UserProfile(models.Model):
 
     def send_confirmation_code(self):
         self.user.email_user("Superlists - Email Verification",
-                             reverse("confirm", kwargs={
+                             reverse("register_confirm", kwargs={
                                  "user_profile_id": self.id,
                                  "code": self.confirmation_code}))
 
