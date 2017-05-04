@@ -1,5 +1,33 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+
+
+class UserProfile(models.Model):
+    """
+    Couples user with their's account confirmation code.
+
+    Attributes:
+        user - user owning the profile
+        confirmation_code - code used in account confirmation process
+    """
+    user = models.OneToOneField(User)
+    confirmation_code = models.CharField(blank=True, max_length=32)
+
+    def __str__(self):
+        return self.user.username
+
+    def get_absolute_url(self):
+        return reverse("user", kwargs={"user_id": self.user.pk})
+
+    def send_confirmation_code(self):
+        self.user.email_user("Superlists - Email Verification",
+                             reverse("confirm", kwargs={
+                                 "user_profile_id": self.id,
+                                 "code": self.confirmation_code}))
+
+    def activate_user(self):
+        self.user.is_active = True
 
 
 class ToDoList(models.Model):
@@ -10,11 +38,14 @@ class ToDoList(models.Model):
         name - name of the list defined by user
         creation_date - determines when the list was created
         is_private - does user allow for displaying his/her list on main page
+        user_profile - profile of the user this list belongs to, can be null
     """
     name = models.CharField(max_length=200)
     creation_date = models.DateTimeField(
         'date created', auto_now_add=True, blank=True)
     is_private = models.BooleanField(default=False)
+    user_profile = models.ForeignKey(
+        UserProfile, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.creation_date) + ' ' + self.name
