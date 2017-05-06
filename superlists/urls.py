@@ -15,5 +15,7 @@ urlpatterns = [
             name='register_success'),
         url(r'^confirm/(?P<user_profile_id>[0-9]+)/(?P<code>.{32})/$',
             views.RegisterConfirmView.as_view(), name='register_confirm')
-    ]))
+    ])),
+    url(r'^login/$', views.user_login, name='login'),
+    url(r'^logout/$', views.user_logout, name='logout'),
 ]

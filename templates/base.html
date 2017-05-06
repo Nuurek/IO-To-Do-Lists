@@ -9,32 +9,51 @@
     <title>Super Lists</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="">
-    <link href="{% static "css/style.css" %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 
 <body>
-<nav class="navbar navbar-default">
-    <div class="container">
-        <a href="{% url "index" %}"><img class="logo" src="{% static "img/logo_black.svg" %}"></a>
-        <div class="log_in navbar-right">
-            <form class="navbar-form">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="email">
-                    <input type="text" class="form-control" placeholder="password">
-                </div>
-                <button type="Submit" class="btn btn-default btn-warning log_button">Log in</button>
-            </form>
+
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/logo_black.svg' %}"></a>
+            {% if user.is_authenticated %}
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{user.username}}</a></li>
+                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span> Logout </a></li>
+            </ul>
+            {% else %}
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form method="post" action="/login/" class="navbar-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" name="username" class="form-control" placeholder="username">
+                            <input type="password" name="password" class="form-control" placeholder="password">
+                        </div>
+                        <button type="Submit" class="btn btn-default btn-warning log_button">Log in</button>
+                    </form>
+                </li>
+                <li>
+                    <form method="get" action="{%url 'register' %}" class="navbar-form">
+                        <button type="Submit" class="btn btn-default btn-warning log_button">Sign up</button>
+                    </form>
+                </li>
+            </ul>
+            {% endif %}
         </div>
+    </nav>
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-warning">
+        {{message}}
     </div>
-</nav>
+    {% endfor %} {% endif %}
+    <div class="container">
+        {% block content %} {% endblock %}
+    </div>
 
-<div class="container">
-{% block content %}
-{% endblock %}
-</div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>

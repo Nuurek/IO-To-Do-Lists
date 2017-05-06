@@ -1,6 +1,9 @@
 from django.views.generic import CreateView, ListView, TemplateView, FormView
 from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from django.utils.crypto import get_random_string
 
 from .models import ToDoList, ToDoListItem, UserProfile
@@ -52,19 +55,24 @@ class ToDoListItemCreateView(FormView):
 
 
 class RegisterView(FormView):
+    EMAIL_VERIFICATON = False
+
     form_class = UserForm
     template_name = 'superlists/register.html'
     model = User
 
     def form_valid(self, form):
         user = form.save()
+        print(user.password)
         user.set_password(user.password)
-        user.is_active = False
+        if EMAIL_VERIFICATON:
+            user.is_active = False
         user.save()
         user_profile = UserProfile(
             user=user, confirmation_code=get_random_string(32))
         user_profile.save()
-        #user_profile.send_confirmation_code()
+        if EMAIL_VERIFICATON:
+            user_profile.send_confirmation_code()
         return super(RegisterView, self).form_valid(form)
 
     def get_success_url(self):
@@ -91,3 +99,20 @@ class RegisterConfirmView(TemplateView):
             context["success"] = False
         return context
 
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+            else:
+                messages.add_message(request, messages.WARNING, 'This account is not active')
+        else:
+            messages.add_message(request, messages.WARNING, 'Username or password incorrect')
+        return HttpResponseRedirect(reverse("index"))
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))
