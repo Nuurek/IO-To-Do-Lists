@@ -12,7 +12,13 @@ from .forms import ToDoListItemForm, UserForm
 
 class ToDoListCreateView(CreateView):
     model = ToDoList
-    fields = "__all__"
+    fields = ("name",)
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated():
+            user = self.request.user
+            form.instance.user_profile = UserProfile.objects.get(user=user)
+        return super(ToDoListCreateView, self).form_valid(form)
 
 
 class PublicToDoListListView(ListView):
@@ -65,13 +71,13 @@ class RegisterView(FormView):
         user = form.save()
         print(user.password)
         user.set_password(user.password)
-        if EMAIL_VERIFICATON:
+        if self.EMAIL_VERIFICATON:
             user.is_active = False
         user.save()
         user_profile = UserProfile(
             user=user, confirmation_code=get_random_string(32))
         user_profile.save()
-        if EMAIL_VERIFICATON:
+        if self.EMAIL_VERIFICATON:
             user_profile.send_confirmation_code()
         return super(RegisterView, self).form_valid(form)
 
@@ -99,6 +105,7 @@ class RegisterConfirmView(TemplateView):
             context["success"] = False
         return context
 
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -108,10 +115,13 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
             else:
-                messages.add_message(request, messages.WARNING, 'This account is not active')
+                messages.add_message(
+                    request, messages.WARNING, 'This account is not active')
         else:
-            messages.add_message(request, messages.WARNING, 'Username or password incorrect')
+            messages.add_message(request, messages.WARNING,
+                                 'Username or password incorrect')
         return HttpResponseRedirect(reverse("index"))
+
 
 def user_logout(request):
     logout(request)
