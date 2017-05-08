@@ -12,7 +12,7 @@ from .forms import ToDoListItemForm, UserForm
 
 class ToDoListCreateView(CreateView):
     model = ToDoList
-    fields = ("name",)
+    fields = ("name","is_private")
 
     def form_valid(self, form):
         if self.request.user.is_authenticated():
@@ -61,7 +61,7 @@ class ToDoListItemCreateView(FormView):
 
 
 class RegisterView(FormView):
-    EMAIL_VERIFICATON = False
+    EMAIL_VERIFICATON = True
 
     form_class = UserForm
     template_name = 'superlists/register.html'
@@ -100,7 +100,7 @@ class RegisterConfirmView(TemplateView):
         if user_profile.confirmation_code == confirmation_code:
             user_profile.activate_user()
             context["success"] = True
-            context["username"] = user_profile.username
+            context["username"] = user_profile.user.username
         else:
             context["success"] = False
         return context

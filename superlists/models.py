@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 class UserProfile(models.Model):
@@ -22,12 +23,16 @@ class UserProfile(models.Model):
 
     def send_confirmation_code(self):
         self.user.email_user("Superlists - Email Verification",
-                             reverse("register_confirm", kwargs={
+                             "Please confirm your registration by clicking this link: "
+                             + "http://"
+                             + settings.ALLOWED_HOSTS[0]
+                             + reverse("register_confirm", kwargs={
                                  "user_profile_id": self.id,
                                  "code": self.confirmation_code}))
 
     def activate_user(self):
         self.user.is_active = True
+        self.user.save()
 
 
 class ToDoList(models.Model):
