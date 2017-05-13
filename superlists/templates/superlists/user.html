@@ -1,0 +1,17 @@
+<h1>placeholder template</h1>
+
+<h1>Hello, {{user.username}}! Your lists:</h1>
+
+<div class="jumbotron">
+    {% if object_list %}
+    <ul class="list-group">
+        {% for todo_list in todo_lists %}
+        <li class="list-group-item">
+            <a href="{% url 'list' todo_list.id %}">{{ todo_list.name }}, {{ todo_list.creation_date }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No lists are available.</p>
+    {% endif %}
+</div>

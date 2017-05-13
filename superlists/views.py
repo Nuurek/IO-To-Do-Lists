@@ -3,8 +3,10 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.utils.crypto import get_random_string
+from django.utils.decorators import method_decorator
 
 from .models import ToDoList, ToDoListItem, UserProfile
 from .forms import ToDoListItemForm, UserForm
@@ -112,6 +114,20 @@ class RegisterConfirmView(TemplateView):
         else:
             context["success"] = False
         return context
+
+
+class UserProfileView(ListView):
+    template_name = "superlists/user.html"
+    fields = "__all__"
+    context_object_name = "todo_lists"
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UserProfileView, self).dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        user_profile = UserProfile.objects.get(user_id=self.request.user.id)
+        return ToDoList.objects.all().filter(user_profile=user_profile)
 
 
 def user_login(request):
