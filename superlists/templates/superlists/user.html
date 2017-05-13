@@ -8,6 +8,7 @@
         {% for todo_list in todo_lists %}
         <li class="list-group-item">
             <a href="{% url 'list' todo_list.id %}">{{ todo_list.name }}, {{ todo_list.creation_date }}</a>
+            <a href={% url 'delete_list' todo_list.id %}>Delete</span></a>
         </li>
         {% endfor %}
     </ul>

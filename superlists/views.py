@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, ListView, TemplateView, FormView
+from django.views.generic import CreateView, ListView, TemplateView, FormView, DeleteView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -128,6 +128,14 @@ class UserProfileView(ListView):
     def get_queryset(self):
         user_profile = UserProfile.objects.get(user_id=self.request.user.id)
         return ToDoList.objects.all().filter(user_profile=user_profile)
+
+
+class ToDoListDeleteView(DeleteView):
+    template_name="superlists/delete_list.html"
+    model = ToDoList
+
+    def get_success_url(self):
+        return reverse("index")
 
 
 def user_login(request):
