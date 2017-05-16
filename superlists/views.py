@@ -152,7 +152,7 @@ def user_login(request):
         else:
             messages.add_message(request, messages.WARNING,
                                  'Username or password incorrect')
-        return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("index"))
 
 
 def user_logout(request):
