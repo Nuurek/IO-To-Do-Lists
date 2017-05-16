@@ -1,6 +1,6 @@
 from django.views.generic import CreateView, ListView, TemplateView, FormView, DeleteView
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -64,11 +64,18 @@ class ToDoListItemCreateView(FormView):
 class ToDoListItemDeleteView(TemplateView):
 
     def get(self, request, todo_list_id, todo_list_item_id):
-        todo_list = ToDoList.objects.get(id=todo_list_id)
-        todo_list_item = ToDoListItem.objects.get(id=todo_list_item_id)
+        try:
+            todo_list = ToDoList.objects.get(id=todo_list_id)
+        except ToDoList.DoesNotExist:
+            raise Http404("List does not exist")
+        try:
+            todo_list_item = ToDoListItem.objects.get(id=todo_list_item_id)
+        except ToDoListItem.DoesNotExist:
+            raise Http404("Task does not exist")
         if todo_list_item:
             todo_list_item.delete()
         return HttpResponseRedirect(reverse("list", kwargs={"todo_list_id": todo_list_id}))
+
 
 class RegisterView(FormView):
     EMAIL_VERIFICATON = True
