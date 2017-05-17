@@ -1,6 +1,7 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 
 from . import views
+
 
 urlpatterns = [
     url(r'^$', views.IndexMixin.as_view(), name='index'),
@@ -12,14 +13,4 @@ urlpatterns = [
         views.ToDoListItemCreateView.as_view(), name='create_item'),
     url(r'^(?P<todo_list_id>[0-9]+)/delete_item/(?P<todo_list_item_id>[0-9]+)/$',
         views.ToDoListItemDeleteView.as_view(), name='delete_item'),
-    url(r'^register/', include([
-        url(r'^$', views.RegisterView.as_view(), name='register'),
-        url(r'^success/$', views.RegisterSuccessView.as_view(),
-            name='register_success'),
-        url(r'^confirm/(?P<user_profile_id>[0-9]+)/(?P<code>.{32})/$',
-            views.RegisterConfirmView.as_view(), name='register_confirm')
-    ])),
-    url(r'^login/$', views.user_login, name='login'),
-    url(r'^logout/$', views.user_logout, name='logout'),
-    url(r'^user/$', views.UserProfileView.as_view(), name='user'),
 ]
