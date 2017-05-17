@@ -61,11 +61,12 @@ class ToDoListItemCreateView(FormView):
         todo_list_id = self.kwargs["todo_list_id"]
         return reverse("list", kwargs={"todo_list_id": todo_list_id})
 
+
 class ToDoListItemDeleteView(TemplateView):
 
     def get(self, request, todo_list_id, todo_list_item_id):
         try:
-            todo_list = ToDoList.objects.get(id=todo_list_id)
+            ToDoList.objects.get(id=todo_list_id)
         except ToDoList.DoesNotExist:
             raise Http404("List does not exist")
         try:

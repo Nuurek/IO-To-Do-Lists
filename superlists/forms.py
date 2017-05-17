@@ -9,6 +9,7 @@ class ToDoListItemForm(forms.ModelForm):
         model = ToDoListItem
         fields = ("name",)
 
+
 class UserForm(forms.ModelForm):
     username = forms.CharField(min_length=4)
     password = forms.CharField(widget=forms.PasswordInput(), min_length=6)
@@ -35,4 +36,3 @@ class UserForm(forms.ModelForm):
             self._errors["email"] = ["Email address already in use"]
             return False
         return True
-        
