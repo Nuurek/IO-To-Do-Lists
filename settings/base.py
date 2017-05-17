@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     # custom apps
     'superlists.apps.SuperlistsConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
