@@ -6,20 +6,32 @@ from accounts.models import UserProfile
 
 class ToDoList(models.Model):
     """
-    The ToDoList class defines the main storage unit in application.
-
-    Attributes:
-        name - name of the list defined by user
-        creation_date - determines when the list was created
-        is_private - does user allow for displaying his/her list on main page
-        user_profile - profile of the user this list belongs to, can be null
+    The ToDoList class defines the main storage unit in the application.
+    Associates many :model:`superlists.ToDoListItem`.
     """
-    name = models.CharField(max_length=200)
+    name = models.CharField(
+        max_length=200,
+        verbose_name="Name of the to-do list",
+        help_text="defined by user"
+    )
     creation_date = models.DateTimeField(
-        'date created', auto_now_add=True, blank=True)
-    is_private = models.BooleanField(default=False)
+        auto_now_add=True,
+        blank=True,
+        verbose_name="Creation date",
+        help_text="saved on the first time the list was created"
+    )
+    is_private = models.BooleanField(
+        default=False,
+        verbose_name="Private",
+        help_text="determines whether list was created by user or not"
+    )
     user_profile = models.ForeignKey(
-        UserProfile, null=True, on_delete=models.CASCADE)
+        UserProfile,
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="Profile",
+        help_text="associated to user by one-to-one relation"
+    )
 
     def __str__(self):
         return str(self.creation_date) + ' ' + self.name
