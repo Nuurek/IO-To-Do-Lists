@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 
-class UserForm(forms.ModelForm):
+class RegisterForm(forms.ModelForm):
     username = forms.CharField(min_length=4)
     password = forms.CharField(widget=forms.PasswordInput(), min_length=6)
     confirm_password = forms.CharField(
@@ -14,7 +14,7 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'email', 'password')
 
     def is_valid(self):
-        valid = super(UserForm, self).is_valid()
+        valid = super(RegisterForm, self).is_valid()
         if not valid:
             return False
         password = self.cleaned_data["password"]
@@ -28,3 +28,10 @@ class UserForm(forms.ModelForm):
             self._errors["email"] = ["Email address already in use"]
             return False
         return True
+
+
+class LoginForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('username', 'password')

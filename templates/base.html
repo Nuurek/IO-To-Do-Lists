@@ -25,7 +25,7 @@
             {% else %}
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <form method="post" action="/login/" class="navbar-form">
+                    <form method="post" action="{% url 'login' %}" class="navbar-form">
                         {% csrf_token %}
                         <div class="form-group">
                             <input type="text" name="username" class="form-control" placeholder="username">
@@ -35,9 +35,9 @@
                     </form>
                 </li>
                 <li>
-                    <form method="get" action="{%url 'register' %}" class="navbar-form">
-                        <button type="Submit" class="btn btn-default btn-warning log_button">Sign up</button>
-                    </form>
+                    <p class="navbar-btn">
+                        <a href="" class="btn btn-warning">Sign up</a>
+                    </p>
                 </li>
             </ul>
             {% endif %}

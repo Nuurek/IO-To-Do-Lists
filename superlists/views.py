@@ -8,7 +8,7 @@ from .models import ToDoList, ToDoListItem, UserProfile
 
 class ToDoListCreateView(CreateView):
     model = ToDoList
-    fields = ("name","is_private")
+    fields = ("name", "is_private")
 
     def form_valid(self, form):
         if self.request.user.is_authenticated():

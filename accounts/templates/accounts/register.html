@@ -1,8 +1,24 @@
-<h3>placeholder template</h3>
+{% extends "base.html" %}
+{% load widget_tweaks %}
 
-Please fill out this form and register to Superlists!
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Register" />
-</form>
+{% block content %}
+    <div class="container text-center">
+        <h3 class="text-center">Sign up</h3>
+        <h4 class="text-center">Please fill out this form and register to Superlists!</h4>
+
+    </div>
+    <div class="container text-center">
+        <div class="col-xs-4"></div>
+        <form action="" method="post" class="col-xs-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {% render_field field class="form-control" %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-warning btn-lg">Sign Up</button>
+        </form>
+        <div class="col-xs-4"></div>
+    </div>
+{% endblock %}

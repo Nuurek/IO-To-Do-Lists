@@ -9,14 +9,14 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, TemplateView, FormView
 
 from superlists.models import ToDoList
-from .forms import UserForm
+from .forms import RegisterForm
 from .models import UserProfile
 
 
 class RegisterView(FormView):
     EMAIL_VERIFICATON = True
 
-    form_class = UserForm
+    form_class = RegisterForm
     template_name = 'accounts/register.html'
     model = User
 
