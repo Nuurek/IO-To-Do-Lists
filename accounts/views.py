@@ -22,7 +22,6 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         user = form.save()
-        print(user.password)
         user.set_password(user.password)
         if self.EMAIL_VERIFICATON:
             user.is_active = False

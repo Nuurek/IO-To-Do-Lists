@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from unittest.mock import patch
 from functools import partial
 from typing import Callable
 
@@ -9,11 +10,12 @@ from superlists.tests import (
     create_todo_list
 )
 from .models import UserProfile
+from .forms import RegisterForm
 
 
 TEST_USERNAME = 'test_user'
 TEST_EMAIL = 'test_user@test.test'
-TEST_PASSWORD = 'test'
+TEST_PASSWORD = 'test123'
 
 
 def create_user_profile(username, email, password):
@@ -197,3 +199,21 @@ class ConfirmViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.user_profile.user.refresh_from_db()
         self.assertFalse(self.user_profile.user.is_active)
+
+
+class RegisterViewTest(TestCase):
+
+    @patch('django.contrib.auth.models.User.email_user')
+    def test_is_confirmation_code_in_sent_email(self, mock_email_user_method):
+        form = {
+            'username': TEST_USERNAME,
+            'email': TEST_EMAIL,
+            'password': TEST_PASSWORD,
+            'confirm_password': TEST_PASSWORD
+        }
+        url = reverse('register')
+        self.client.post(url, form)
+        created_profile = UserProfile.objects.get(user__username=TEST_USERNAME)
+        confirmation_code = created_profile.confirmation_code
+        called_argument = mock_email_user_method.call_args_list[0][0][1]
+        self.assertTrue(confirmation_code in called_argument)
