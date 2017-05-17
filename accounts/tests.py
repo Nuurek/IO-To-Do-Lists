@@ -1,34 +1,19 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.crypto import get_random_string
+from functools import partial
+from typing import Callable
 
-from superlists.models import ToDoList, ToDoListItem
+from superlists.tests import (
+    create_todo_list
+)
 from .models import UserProfile
 
 
-def create_todo_list(name, is_private, user_profile=None):
-    """
-    Create new ToDoList at present time and add it to database.
-
-    Attributes:
-        name - name of the list
-        private - should list be displayed on main page
-    """
-    return ToDoList.objects.create(name=name, creation_date=timezone.now(), is_private=is_private, user_profile=user_profile)
-
-
-def create_todo_list_item(name, completed, todo_list):
-    """
-    Create new ToDo List Item for given ToDo List.
-
-    Attributes:
-        name - name of the item
-        completed - whether item is completed
-        todo_list - ToDo List to which item belongs
-    """
-    return ToDoListItem.objects.create(name=name, completed=completed, todo_list=todo_list)
+TEST_USERNAME = 'test_user'
+TEST_EMAIL = 'test_user@test.test'
+TEST_PASSWORD = 'test'
 
 
 def create_user_profile(username, email, password):
@@ -42,6 +27,11 @@ def create_user_profile(username, email, password):
     """
     user = User.objects.create_user(username, email, password)
     return UserProfile.objects.create(user=user, confirmation_code=get_random_string(32))
+
+
+create_test_user_profile: Callable[[], UserProfile] = partial(
+    create_user_profile, TEST_USERNAME, TEST_EMAIL, TEST_PASSWORD
+)
 
 
 class UserProfileViewTest(TestCase):
@@ -61,11 +51,8 @@ class UserProfileViewTest(TestCase):
         """
         UserProfile view without todo lists should be empty.
         """
-        username = "testuser"
-        email = "testuser@test"
-        password = "test"
-        create_user_profile(username, email, password)
-        self.client.login(username=username, password=password)
+        create_test_user_profile()
+        self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         url = reverse("user")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -75,12 +62,9 @@ class UserProfileViewTest(TestCase):
         """
         UserProfile view with todo lists should display the lists.
         """
-        username = "testuser"
-        email = "testuser@test"
-        password = "test"
-        user_profile = create_user_profile(username, email, password)
+        user_profile = create_test_user_profile()
         create_todo_list("Test todo list", False, user_profile=user_profile)
-        self.client.login(username=username, password=password)
+        self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         url = reverse("user")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -92,54 +76,42 @@ class LoginViewTest(TestCase):
     Collection of tests for user_login method.
     """
 
-    username = "testuser"
-    email = "testuser@test"
-    password = "test"
-    user_profile = None
-
     def setUp(self):
-        self.user_profile = create_user_profile(
-            self.username, self.email, self.password)
+        self.user_profile = create_test_user_profile()
+        self.credentials = {
+            'username': TEST_USERNAME,
+            'password': TEST_PASSWORD,
+        }
 
     def test_login_correct(self):
         """
         Login attempt with correct credentials should succeed.
         """
-        arguments = {
-            "username": self.username,
-            "password": self.password
-        }
         url = reverse("login")
-        response = self.client.post(url, arguments, follow=True)
+        response = self.client.post(url, self.credentials, follow=True)
         self.assertRedirects(response, reverse("index"))
-        self.assertContains(response, self.username)
+        self.assertContains(response, TEST_USERNAME)
 
     def test_login_incorrect_username(self):
         """
         Login attempt with incorrect username should not succeed.
         """
-        arguments = {
-            "username": self.username.join("XD"),
-            "password": self.password
-        }
+        self.credentials['username'] += "XD"
         url = reverse("login")
-        response = self.client.post(url, arguments, follow=True)
+        response = self.client.post(url, self.credentials, follow=True)
         self.assertRedirects(response, reverse("index"))
-        self.assertNotContains(response, self.username)
+        self.assertNotContains(response, TEST_USERNAME)
         self.assertContains(response, "Username or password incorrect")
 
     def test_login_incorrect_password(self):
         """
         Login attempt with incorrect password should not succeed.
         """
-        arguments = {
-            "username": self.username,
-            "password": self.password.join("XD")
-        }
+        self.credentials['password'] += "XD"
         url = reverse("login")
-        response = self.client.post(url, arguments, follow=True)
+        response = self.client.post(url, self.credentials, follow=True)
         self.assertRedirects(response, reverse("index"))
-        self.assertNotContains(response, self.username)
+        self.assertNotContains(response, TEST_USERNAME)
         self.assertContains(response, "Username or password incorrect")
 
     def test_login_inactive_user(self):
@@ -148,15 +120,17 @@ class LoginViewTest(TestCase):
         """
         self.user_profile.user.is_active = False
         self.user_profile.user.save()
-        arguments = {
-            "username": self.username,
-            "password": self.password
-        }
         url = reverse("login")
-        response = self.client.post(url, arguments, follow=True)
-        self.assertRedirects(response, reverse("index"))
-        self.assertNotContains(response, self.username)
+        response = self.client.post(url, self.credentials, follow=True)
+        self.assertNotContains(response, TEST_USERNAME)
         self.assertContains(response, "Username or password incorrect")
+
+    def test_login_inactive_user_redirects_to_home_page(self):
+        self.user_profile.user.is_active = False
+        self.user_profile.user.save()
+        url = reverse("login")
+        response = self.client.post(url, self.credentials, follow=True)
+        self.assertRedirects(response, reverse("index"))
 
     def test_login_get(self):
         """
@@ -184,15 +158,12 @@ class LogoutViewTest(TestCase):
         """
         Logout attempt with user logged in should succeed.
         """
-        username = "testuser"
-        email = "testuser@test"
-        password = "test"
-        create_user_profile(username, email, password)
-        self.client.login(username=username, password=password)
+        create_test_user_profile()
+        self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         url = reverse("logout")
         response = self.client.get(url, follow=True)
         self.assertRedirects(response, reverse("index"))
-        self.assertNotContains(response, username)
+        self.assertNotContains(response, TEST_USERNAME)
 
 
 class ConfirmViewTest(TestCase):
@@ -200,14 +171,8 @@ class ConfirmViewTest(TestCase):
     Collection of tests for RegisterConfirmView class.
     """
 
-    username = "testuser"
-    email = "testuser@test"
-    password = "test"
-    user_profile = None
-
     def setUp(self):
-        self.user_profile = create_user_profile(
-            self.username, self.email, self.password)
+        self.user_profile = create_test_user_profile()
         self.user_profile.user.is_active = False
         self.user_profile.user.save()
 

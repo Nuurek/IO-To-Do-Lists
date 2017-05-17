@@ -1,10 +1,31 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
-from accounts.tests import (
-    create_todo_list, create_todo_list_item
-)
 from .models import ToDoList, ToDoListItem
+
+
+def create_todo_list(name, is_private, user_profile=None):
+    """
+    Create new ToDoList at present time and add it to database.
+
+    Attributes:
+        name - name of the list
+        private - should list be displayed on main page
+    """
+    return ToDoList.objects.create(name=name, creation_date=timezone.now(), is_private=is_private, user_profile=user_profile)
+
+
+def create_todo_list_item(name, completed, todo_list):
+    """
+    Create new ToDo List Item for given ToDo List.
+
+    Attributes:
+        name - name of the item
+        completed - whether item is completed
+        todo_list - ToDo List to which item belongs
+    """
+    return ToDoListItem.objects.create(name=name, completed=completed, todo_list=todo_list)
 
 
 class IndexViewTests(TestCase):
