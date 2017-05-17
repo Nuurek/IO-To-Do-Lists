@@ -17,7 +17,7 @@ class RegisterView(FormView):
     EMAIL_VERIFICATON = True
 
     form_class = UserForm
-    template_name = 'superlists/register.html'
+    template_name = 'accounts/register.html'
     model = User
 
     def form_valid(self, form):
@@ -35,34 +35,34 @@ class RegisterView(FormView):
         return super(RegisterView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse("register_success")
+        return reverse('register_success')
 
 
 class RegisterSuccessView(TemplateView):
-    template_name = "superlists/register_success.html"
+    template_name = 'accounts/register_success.html'
 
 
 class RegisterConfirmView(TemplateView):
-    template_name = "superlists/register_confirm.html"
+    template_name = 'accounts/register_confirm.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user_profile_id = kwargs["user_profile_id"]
-        confirmation_code = kwargs["code"]
+        user_profile_id = kwargs['user_profile_id']
+        confirmation_code = kwargs['code']
         user_profile = UserProfile.objects.get(id=user_profile_id)
         if user_profile.confirmation_code == confirmation_code:
             user_profile.activate_user()
-            context["success"] = True
-            context["username"] = user_profile.user.username
+            context['success'] = True
+            context['username'] = user_profile.user.username
         else:
-            context["success"] = False
+            context['success'] = False
         return context
 
 
 class UserProfileView(ListView):
-    template_name = "superlists/user.html"
-    fields = "__all__"
-    context_object_name = "todo_lists"
+    template_name = 'accounts/user.html'
+    fields = '__all__'
+    context_object_name = 'todo_lists'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -87,9 +87,9 @@ def user_login(request):
         else:
             messages.add_message(request, messages.WARNING,
                                  'Username or password incorrect')
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse('index'))
 
 
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse('index'))
