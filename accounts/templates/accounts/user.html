@@ -1,18 +1,25 @@
-<h1>placeholder template</h1>
+{% extends "base.html" %}
+{% load widget_tweaks %}
 
-<h1>Hello, {{user.username}}! Your lists:</h1>
-
-<div class="jumbotron">
-    {% if object_list %}
-    <ul class="list-group">
-        {% for todo_list in todo_lists %}
-        <li class="list-group-item">
-            <a href="{% url 'list' todo_list.id %}">{{ todo_list.name }}, {{ todo_list.creation_date }}</a>
-            <a href={% url 'delete_list' todo_list.id %}>Delete</span></a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No lists are available.</p>
-    {% endif %}
-</div>
+{% block content %}
+    <div class="jumbotron text-center">
+        <h2>Hello, <b>{{user.username}}</b>!</h2>
+        {% if object_list %}
+            <h3>Your lists:</h3>
+        {% endif %}
+    </div>
+    <div class="container text-center">
+        {% if object_list %}
+        <ul class="list-group">
+            {% for todo_list in todo_lists %}
+            <li class="list-group-item">
+                <a href="{% url 'list' todo_list.id %}">{{ todo_list.name }}, {{ todo_list.creation_date }}</a>
+                <a href={% url 'delete_list' todo_list.id %}>Delete</span></a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No lists are available.</p>
+        {% endif %}
+    </div>
+{% endblock %}

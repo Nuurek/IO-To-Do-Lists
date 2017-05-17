@@ -8,6 +8,10 @@ body {
     padding-bottom: 10px;
 }
 
+.navbar-default .navbar-nav>li>a {
+    color: white;
+}
+
 .navbar-form {
     border: 0;
 }

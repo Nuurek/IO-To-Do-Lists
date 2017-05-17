@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <div class="container text-center">
+        <h2>
+            {% if success %}
+                Thank you,
+            {% else %}
+                Oops,
+            {% endif %}
+        </h2>
+
+        <h3>
+            {% if success %}
+                {{username}} for confirming your account!
+            {% else %}
+                something went wrong.
+            {% endif %}
+        </h3>
+
+        <h3>
+            {% if success %}
+                You may now log in.
+            {% else %}
+                Go back to <a href="{% url 'index' %}">homepage</a>.
+            {% endif %}
+        </h3>
+    </div>
+{% endblock %}

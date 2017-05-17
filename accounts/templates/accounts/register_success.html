@@ -1,5 +1,10 @@
-<h3>placeholder template</h3>
+{% extends "base.html" %}
+{% load widget_tweaks %}
 
-Thanks for your registration to Superlists! Check your mailbox for verification code.
-
-<a href="{% url 'index' %}">Home page</a>
+{% block content %}
+    <div class="container text-center">
+        <h2>Thanks for your registration to Superlists!</h2>
+        <h3>Check your mailbox for verification code.</h3>
+        <h4><a href="{% url 'index' %}">Home page</a></h4>
+    </div>
+{% endblock %}

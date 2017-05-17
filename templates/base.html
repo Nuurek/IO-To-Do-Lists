@@ -14,15 +14,27 @@
 
 <body>
 
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/logo_black.svg' %}"></a>
-            {% if user.is_authenticated %}
+<nav class="navbar navbar-default">
+    <div class="container">
+        <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/logo_black.svg' %}"></a>
+        {% if user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'user' %}"><span class="glyphicon glyphicon-user"></span> {{user.username}}</a></li>
-                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span> Logout </a></li>
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <button type="button" class="btn btn-warning">
+                            <span class="glyphicon glyphicon-log-out"></span> Log out
+                        </button>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'user' %}">
+                        <button type="button" class="btn btn-warning">
+                            <span class="glyphicon glyphicon-user"></span> {{user.username}}
+                        </button>
+                    </a>
+                </li>
             </ul>
-            {% else %}
+        {% else %}
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <form method="post" action="{% url 'login' %}" class="navbar-form">
@@ -31,29 +43,33 @@
                             <input type="text" name="username" class="form-control" placeholder="username">
                             <input type="password" name="password" class="form-control" placeholder="password">
                         </div>
-                        <button type="Submit" class="btn btn-default btn-warning log_button">Log in</button>
+                        <button type="submit" class="btn btn-warning">
+                            <span class="glyphicon glyphicon-log-out"></span> Log in
+                        </button>
+                        <a href="{% url 'register' %}">
+                        <button type="button" class="btn btn-warning">
+                            <span class="glyphicon glyphicon-user"></span> Sign up
+                        </button>
+                        </a>
                     </form>
                 </li>
                 <li>
-                    <p class="navbar-btn">
-                        <a href="" class="btn btn-warning">Sign up</a>
-                    </p>
                 </li>
             </ul>
-            {% endif %}
-        </div>
-    </nav>
-    {% if messages %} {% for message in messages %}
+        {% endif %}
+    </div>
+</nav>
+{% if messages %} {% for message in messages %}
     <div class="alert alert-warning">
         {{message}}
     </div>
-    {% endfor %} {% endif %}
-    <div class="container">
-        {% block content %} {% endblock %}
-    </div>
+{% endfor %} {% endif %}
+<div class="container">
+    {% block content %} {% endblock %}
+</div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -2,19 +2,23 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <div class="container">
+    <div class="container text-center">
         <div class="jumbotron">
-            <p class="list_name form-control">{{ todo_list.name }} <a href={% url 'delete_list' todo_list.id %}><span class="glyphicon glyphicon-trash pull-right"></span></a></p>
-            <ul class="list-group">
-                {% for todo_list_item in todo_list.todolistitem_set.all %}
-                    <li class="list-group-item">{{ todo_list_item }} <a href={% url 'delete_item' todo_list.id todo_list_item.id %}><span class="glyphicon glyphicon-remove pull-right"></span></a></li>
-                {% endfor %}
-            </ul>
-            <form class="form-group" action="{% url 'create_item' todo_list.id %}" method="post">
-                {% csrf_token %}
-                {{ form.name|add_class:"new_element form-control" }}
-                <button type="submit" class="btn btn-primary " placeholder="Add new element">Add new element</button>
-            </form>
+            <h2>{{ todo_list.name }}</h2>
+            <div class="container">
+                <ul class="list-group">
+                    {% for todo_list_item in todo_list.todolistitem_set.all %}
+                        <li class="list-group-item">{{ todo_list_item }} <a href={% url 'delete_item' todo_list.id todo_list_item.id %}><span class="glyphicon glyphicon-remove pull-right"></span></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="container text-center">
+                <form class="form-group" action="{% url 'create_item' todo_list.id %}" method="post">
+                    {% csrf_token %}
+                    {{ form.name|add_class:"new_element form-control text-center" }}
+                    <button type="submit" class="btn btn-primary ">Add new element</button>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}
