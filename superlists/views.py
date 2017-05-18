@@ -7,6 +7,9 @@ from .models import ToDoList, ToDoListItem, UserProfile
 
 
 class ToDoListCreateView(CreateView):
+    """
+    View that allows to create new instances of ToDoList.
+    """
     model = ToDoList
     fields = ("name", "is_private")
 
@@ -24,10 +27,24 @@ class PublicToDoListListView(ListView):
 
 
 class IndexMixin(ToDoListCreateView, PublicToDoListListView):
+    """
+    Display home page of SuperLists website.
+    """
     template_name = "superlists/index.html"
 
 
 class ToDoListDetailView(TemplateView):
+    """
+    Displays details of :model:`superlists.ToDoList`.
+
+    **Context**
+
+    ``todo_list``
+        :model:`superlists.ToDoList`
+
+    ``to_do_list_items``
+        :model:`superlists.ToDoListItem`\s associated with this ToDoList
+    """
     template_name = "superlists/list.html"
 
     def get_context_data(self, **kwargs):
