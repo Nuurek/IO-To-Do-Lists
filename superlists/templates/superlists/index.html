@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <form class="jumbotron" action="{% url 'create_list' %}" method="post">
+    <form id="list-form" class="jumbotron" action="{% url 'create_list' %}" method="post">
         {% csrf_token %}
         <h1>Start a new TO-DO list!</h1>
         <p>{{ form.name|attr:"type:text"|attr:"class:form-control text-center"|attr:"placeholder:Name your new list" }}</p>
@@ -13,7 +13,7 @@
                 Private?
             </label>
         </div>
-        <button type="submit" class="btn btn-lg btn-warning">Create list</button>
+        <button id="list-submit" type="submit" class="btn btn-lg btn-warning">Create list</button>
     </form>
 
     <div class="jumbotron">

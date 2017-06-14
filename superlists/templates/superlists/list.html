@@ -13,10 +13,10 @@
                 </ul>
             </div>
             <div class="container text-center">
-                <form class="form-group" action="{% url 'create_item' todo_list.id %}" method="post">
+                <form id="list-item-form" class="form-group" action="{% url 'create_item' todo_list.id %}" method="post">
                     {% csrf_token %}
                     {{ form.name|add_class:"new_element form-control text-center" }}
-                    <button type="submit" class="btn btn-primary ">Add new element</button>
+                    <button id="list-item-submit" type="submit" class="btn btn-primary ">Add new element</button>
                 </form>
             </div>
         </div>
