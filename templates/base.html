@@ -16,7 +16,11 @@
 
 <nav class="navbar navbar-default">
     <div class="container">
-        <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/logo_black.svg' %}"></a>
+        <a href="{% url 'logout' %}">
+            <button type="button" class="btn btn-danger btn-lg">
+                <span class="glyphicon glyphicon-plane"></span> Superlists!
+            </button>
+        </a>
         {% if user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
                 <li>

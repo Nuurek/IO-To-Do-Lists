@@ -128,6 +128,9 @@ class LoginViewTest(TestCase):
         self.assertContains(response, "Username or password incorrect")
 
     def test_login_inactive_user_redirects_to_home_page(self):
+        """
+        Login attempt for inactive user should redirect to home page.
+        """
         self.user_profile.user.is_active = False
         self.user_profile.user.save()
         url = reverse("login")
@@ -164,8 +167,17 @@ class LogoutViewTest(TestCase):
         self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
         url = reverse("logout")
         response = self.client.get(url, follow=True)
-        self.assertRedirects(response, reverse("index"))
         self.assertNotContains(response, TEST_USERNAME)
+
+    def test_logout_redirect_to_index(self):
+        """
+        Logout attempt with user logged in should redirect to home page.
+        """
+        create_test_user_profile()
+        self.client.login(username=TEST_USERNAME, password=TEST_PASSWORD)
+        url = reverse("logout")
+        response = self.client.get(url, follow=True)
+        self.assertRedirects(response, reverse("index"))
 
 
 class ConfirmViewTest(TestCase):

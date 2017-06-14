@@ -123,10 +123,22 @@ class DeleteToDoListItemViewTest(TestCase):
         self.assertRedirects(response, reverse("list", args=(todo_list.id,)))
         url = reverse("list", args=(todo_list.id,))
         response = self.client.get(url)
-        with self.assertRaises(ToDoListItem.DoesNotExist):
-            self.assertEqual(ToDoListItem.objects.get(id=task.id), None)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Test todo list item")
+
+    def test_deleted_todo_list_item_raises_exception(self):
+        """
+        Attempt to retrieve deleted todo list item should raise exception.
+        """
+        todo_list = create_todo_list("Test todo list", False)
+        task = create_todo_list_item("Test todo list item", False, todo_list)
+        url = reverse("delete_item", args=(todo_list.id, task.id))
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse("list", args=(todo_list.id,)))
+        url = reverse("list", args=(todo_list.id,))
+        response = self.client.get(url)
+        with self.assertRaises(ToDoListItem.DoesNotExist):
+            self.assertEqual(ToDoListItem.objects.get(id=task.id), None)
 
     def test_delete_nonexistent_item(self):
         """
