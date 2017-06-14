@@ -8,7 +8,7 @@
     </div>
     <div class="container text-center">
         <div class="col-xs-4"></div>
-        <form action="" method="post" class="col-xs-4">
+        <form id="signup-form" method="post" class="col-xs-4">
             {% csrf_token %}
             {% for field in form %}
                 <div class="form-group">
@@ -17,7 +17,7 @@
                     <p class="small">{{ field.errors }}</p>
                 </div>
             {% endfor %}
-            <button type="submit" class="btn btn-warning btn-lg">Sign Up</button>
+            <button id="signup-submit" type="submit" class="btn btn-warning btn-lg">Sign up</button>
         </form>
         <div class="col-xs-4"></div>
     </div>

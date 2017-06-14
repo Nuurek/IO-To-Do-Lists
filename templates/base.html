@@ -32,7 +32,7 @@
                 </li>
                 <li>
                     <a href="{% url 'user' %}">
-                        <button type="button" class="btn btn-warning">
+                        <button id="user-button" type="button" class="btn btn-warning">
                             <span class="glyphicon glyphicon-user"></span> {{user.username}}
                         </button>
                     </a>
@@ -47,7 +47,7 @@
                             <input type="text" name="username" class="form-control" placeholder="username">
                             <input type="password" name="password" class="form-control" placeholder="password">
                         </div>
-                        <button type="submit" class="btn btn-warning">
+                        <button id="login-submit" type="submit" class="btn btn-warning">
                             <span class="glyphicon glyphicon-log-out"></span> Log in
                         </button>
                         <a href="{% url 'register' %}">
